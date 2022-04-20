@@ -3,12 +3,15 @@
 #include <windows.h>
 #include <time.h>
 
-# define prof 9
+# define prof 8
 # define false 0
 # define true 1
 
+#define ROWS 6
+#define COLUMNS 7
+
 int vez = 0, jogadas = 0;
-int game[7][6];
+int game[COLUMNS][ROWS];
 int col, lin, plac_1 = 0, plac_2 = 0;
 
 void iniciar();
@@ -97,9 +100,9 @@ void humano()
 
 	if (vez == 1)
 	{
-	SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), RED);
-	printf("\nSua vez, humano");
-	jogar();
+		SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), RED);
+		printf("\nSua vez, humano");
+		jogar();
 	}
 	else
 	{
@@ -131,7 +134,7 @@ void jogar()
 	printf("\nEm que coluna deseja jogar?\n");
 	coluna:
 	scanf("%d", &col);
-	if (col < 1 || col > 7)
+	if (col < 1 || col > COLUMNS)
 	{
 		printf("\nColuna invalida! Digite outro valor para a coluna, entre 1 e 7:\n");
 		goto coluna;
@@ -155,8 +158,8 @@ void iniciar()
 {
 	jogadas = 0;
 	SetConsoleTextAttribute (GetStdHandle (STD_OUTPUT_HANDLE), WHITE);
-	for (col = 0; col < 7; col ++)
-		for (lin = 0; lin < 6; lin ++)
+	for (col = 0; col < COLUMNS; col ++)
+		for (lin = 0; lin < ROWS; lin ++)
 			game[col][lin] = 0;
 }
 
@@ -164,9 +167,9 @@ void mostrar()
 {
 	//system("cls");
 	printf("\n 1 2 3 4 5 6 7\n");
-	for (lin = 0; lin < 6; lin ++)
+	for (lin = 0; lin < ROWS; lin ++)
 	{
-		for (col = 0; col < 7; col ++)
+		for (col = 0; col < COLUMNS; col ++)
 		{
 			switch (game[col][lin])
 			{
@@ -204,7 +207,7 @@ int fim(int i, int j)
 	{
 		//Verifica a vertical
 		int al_vert = 1;
-		while (game[i][j] == game[i][j + al_vert] && j + al_vert < 6)
+		while (game[i][j] == game[i][j + al_vert] && j + al_vert < ROWS)
 			al_vert ++;
 		
 		if (al_vert >= 4)
@@ -213,7 +216,7 @@ int fim(int i, int j)
 		{
 			//Verifica a diagonal principal
 			int al_cd = 1, al_be = 1;
-			while (game[i][j] == game[i + al_cd][j + al_cd] && i + al_cd < 7 && j + al_cd < 6)
+			while (game[i][j] == game[i + al_cd][j + al_cd] && i + al_cd < 7 && j + al_cd < ROWS)
 				al_cd ++;
 			while (game[i][j] == game[i - al_be][j - al_be] && i - al_be >= 0 && j - al_be >= 0)
 				al_be ++;
@@ -226,7 +229,7 @@ int fim(int i, int j)
 				int al_ce = 1, al_bd = 1;
 				while (game[i][j] == game[i + al_ce][j - al_ce] && i + al_ce < 7 && j - al_ce >= 0)
 					al_ce ++;
-				while (game[i][j] == game[i - al_bd][j + al_bd] && i - al_bd >= 0 && j + al_bd < 6)
+				while (game[i][j] == game[i - al_bd][j + al_bd] && i - al_bd >= 0 && j + al_bd < ROWS)
 					al_bd ++;
 				
 				if (al_ce + al_bd - 1 >= 4)
