@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <time.h>
 
-# define SEARCH_DEPTH 8
+# define SEARCH_DEPTH 9
 # define false 0
 # define true 1
 
@@ -13,6 +13,7 @@
 int vez = 0, jogadas = 0;
 int game[COLUMNS][ROWS];
 int col, lin, plac_1 = 0, plac_2 = 0;
+int topos[COLUMNS] = {0};
 
 void iniciar();
 void mostrar();
@@ -113,7 +114,7 @@ void humano()
 void ai()
 {
 	int ch;
-	system("cls");
+	// system("cls");
 	mostrar();
 	printf("\nPensando...");
 	clock_t t = clock();
@@ -121,7 +122,7 @@ void ai()
 	t = clock() - t;
 	
 	printf("\nVou jogar na coluna %d!", col + 1);
-	printf("\nTempo de execucao: %ld", t);
+	printf("\nTempo de execucao: %ld ms", t);
 	game[col][lin] = vez;
 	//sleep(1);
 	jogadas ++;
@@ -263,7 +264,7 @@ int verifica_2p()
 	
 	if (end == 0)
 	{
-		system("cls");
+		// system("cls");
 		mostrar();
 		printf ("\nParabens ");
 		if (vez == 1)
@@ -288,7 +289,7 @@ int verifica_ai()
 	
 	if (end == 0)
 	{
-		system("cls");
+		// system("cls");
 		mostrar();
 		if (vez == 1)
 		{
@@ -311,7 +312,7 @@ int verifica_ai()
 
 void jogada_ai()
 {
-	int i, j, score, bestScore = INT_MIN, p;
+	int i, j, score, bestScore = INT_MIN, best_column[COLUMNS] = {0}, n_columns = 0;
 	for (i = 0; i < 7; i++)
 	{
 		if (game[i][0] == 0)
@@ -329,16 +330,23 @@ void jogada_ai()
 				bestScore = score;
 				col = i;
 				lin = j;
-			}else if (score == bestScore)
-			{
-				if (rand()%100 < 35)
-				{
-					col = i;
-					lin = j;
-				}
+				n_columns = 0;
 			}
-			
+			if (score >= bestScore)
+			{
+				best_column[n_columns] = i;
+				n_columns++;
+			}
 		}
+	}
+	if (n_columns > 1)
+	{
+		i = best_column[rand()%n_columns];
+		j = 5;
+		while(game[i][j] != 0)
+			j--;
+		col = i;
+		lin = j;
 	}
 }
 
