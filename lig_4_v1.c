@@ -13,7 +13,7 @@
 int vez = 0, jogadas = 0;
 int game[COLUMNS][ROWS];
 int col, lin, plac_1 = 0, plac_2 = 0;
-int topos[COLUMNS] = {0};
+int topos[COLUMNS];
 
 void iniciar();
 void mostrar();
@@ -141,18 +141,15 @@ void jogar()
 		goto coluna;
 	}
 	col --;
-	lin = 5;
-	while (game[col][lin] != 0)
+	lin = topos[col];
+	if (lin < 0)
 	{
-		lin -= 1;
-		if (lin < 0)
-		{
-			printf("\nEsta coluna esta cheia!\nInforme outra coluna:\n");
-			goto coluna;
-		}
+		printf("\nEsta coluna esta cheia!\nInforme outra coluna:\n");
+		goto coluna;
 	}
 	game[col][lin] = vez;
 	jogadas ++;
+	topos[col] --;
 }
 
 void iniciar()
@@ -162,6 +159,8 @@ void iniciar()
 	for (col = 0; col < COLUMNS; col ++)
 		for (lin = 0; lin < ROWS; lin ++)
 			game[col][lin] = 0;
+	for (col = 0; col < COLUMNS; col ++)
+		topos[col] = ROWS - 1;
 }
 
 void mostrar()
@@ -317,13 +316,13 @@ void jogada_ai()
 	{
 		if (game[i][0] == 0)
 		{
-			j = 5;
-			while(game[i][j] != 0)
-				j--;
+			j = topos[i];
+			topos[i]--;
 			game[i][j] = 2;
 			score = minimax(false, i, j, INT_MIN, INT_MAX, SEARCH_DEPTH);
 			
 			game[i][j] = 0;
+			topos[i]++;
 			//printf("\nO score pra a coluna %d � de %d", i + 1, score);
 			if (score > bestScore)
 			{
@@ -342,9 +341,8 @@ void jogada_ai()
 	if (n_columns > 1)
 	{
 		i = best_column[rand()%n_columns];
-		j = 5;
-		while(game[i][j] != 0)
-			j--;
+		j = topos[i];
+		topos[i]--;
 		col = i;
 		lin = j;
 	}
@@ -370,12 +368,12 @@ int minimax(int isMaxi, int last_i, int last_j, int alpha, int beta, int depth)
 			
 			if(game[i][0] == 0)
 			{
-				j = 5;
-				while (game[i][j] != 0)
-					j --;
+				j = topos[i];
+				topos[i]--;
 				game[i][j] = 2;
 				int score = minimax(false, i, j, alpha, beta, depth - 1);
 				game[i][j] = 0;
+				topos[i]++;
 				
 				bestScore = max(score, bestScore);
 				alpha = max(score, alpha);
@@ -393,12 +391,12 @@ int minimax(int isMaxi, int last_i, int last_j, int alpha, int beta, int depth)
 		{
 			if (game[i][0] == 0)
 			{
-				j = 5;
-				while (game[i][j] != 0)
-					j--;
+				j = topos[i];
+				topos[i]--;
 				game[i][j] = 1;
 				int score = minimax(true, i, j, alpha, beta, depth - 1);
 				game[i][j] = 0;
+				topos[i]++;
 				
 				bestScore = min(score, bestScore);
 
