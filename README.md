@@ -2,7 +2,7 @@
 
 Implementation of minimax algorithm
 
-![Game gif](./demo.gif)
+<a href="https://asciinema.org/a/AFmCYonN1nBERGUhJf6o3hjtl" target="_blank"><img src="https://asciinema.org/a/AFmCYonN1nBERGUhJf6o3hjtl.svg" /></a>
 
 ## Installation
 
